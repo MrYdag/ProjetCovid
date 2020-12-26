@@ -46,6 +46,9 @@
     <div class="button">
         <button type="submit">Confirmer l'inscription</button>
     </div>
+
+    <p class="${empty erreurs ? 'succes' : 'erreur'}">${resultat}</p>
+
 </form>
 
 <br/>

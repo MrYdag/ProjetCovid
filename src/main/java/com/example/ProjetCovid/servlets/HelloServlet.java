@@ -1,5 +1,6 @@
 package com.example.ProjetCovid.servlets;
 
+import com.example.ProjetCovid.beans.Database;
 import com.example.ProjetCovid.beans.User;
 
 import java.io.*;
@@ -70,6 +71,8 @@ public class HelloServlet extends HttpServlet {
         /* Initialisation du résultat global de la validation. */
         if ( erreurs.isEmpty() ) {
             resultat = "Succès de l'inscription.";
+            Database dataBase = new Database();
+            dataBase.inscrireUser(user);
         } else {
             resultat = "Échec de l'inscription.";
         }
@@ -139,7 +142,7 @@ public class HelloServlet extends HttpServlet {
     }
 
     private void validationDateNaissance(String date) throws Exception {
-        if(date != null) {
+        if(date == null) {
             throw  new Exception("Vous devez bien avoir une date de naissance, non ?");
         }
     }
