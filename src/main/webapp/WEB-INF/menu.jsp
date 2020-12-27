@@ -18,8 +18,7 @@
 <body>
 
 <ul id="navigation">
-    <li><a href="accueilServlet" title="Retourner à l'accueil">Accueil</a></li>
-    <li><a href="#" title="aller à la section 4">WIP</a></li>
+    <li><a href="accueil" title="Retourner à l'accueil">Accueil</a></li>
     <li><a href="#" title="aller à la section 5">WIP</a></li>
 
     <%-- Deconnecté --%>
@@ -30,6 +29,7 @@
 
     <%-- Connecté --%>
     <c:if test="${ !empty sessionScope.current_user }">
+        <li><a href="information" title="Voir votre compte">Parametres</a></li>
         <li><a href="deconnexion" title="Se deconnecter">Deconnexion</a></li>
     </c:if>
 

@@ -2,7 +2,6 @@ package com.example.ProjetCovid.servlets;
 
 import com.example.ProjetCovid.beans.Database;
 import com.example.ProjetCovid.beans.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

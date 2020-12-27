@@ -2,8 +2,9 @@ package com.example.ProjetCovid.servlets;
 
 import com.example.ProjetCovid.beans.Database;
 import com.example.ProjetCovid.beans.User;
-
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -67,6 +68,13 @@ public class SignUpServlet extends HttpServlet {
         } catch (Exception e) {
             erreurs.put("birthday",e.getMessage());
         }
+        user.setDateNaissance(dateBirthday);
+
+        //Date de la création du compte
+        SimpleDateFormat formater = null;
+        Date aujourdhui = new Date();
+        formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+        user.setDateCreation(formater.format(aujourdhui));
 
         /* Initialisation du résultat global de la validation. */
         if ( erreurs.isEmpty() ) {
@@ -112,9 +120,9 @@ public class SignUpServlet extends HttpServlet {
 
     /**
      * Verifie que le mot de passe est correctement formé
-     * @param motDePasse
-     * @param confirmation
-     * @throws Exception
+     * @param motDePasse mot de passe de l'utilisateur
+     * @param confirmation mot de passe de confirmation de l'utilisateur
+     * @throws Exception indique l'erreur
      */
     private void validationMotsDePasse( String motDePasse, String confirmation ) throws Exception{
         if (motDePasse != null && motDePasse.trim().length() != 0 && confirmation != null && confirmation.trim().length() != 0) {

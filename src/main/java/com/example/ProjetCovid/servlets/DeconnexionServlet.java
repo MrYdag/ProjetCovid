@@ -1,6 +1,5 @@
 package com.example.ProjetCovid.servlets;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +20,7 @@ public class DeconnexionServlet extends HttpServlet {
         response.sendRedirect("index.jsp");
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
         session.invalidate();

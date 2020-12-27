@@ -10,7 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "accueilServlet", value = "/accueilServlet")
+//todo Commenter le code
+
+@WebServlet(name = "accueilServlet", value = "/accueil")
 public class AccueilServlet extends HttpServlet {
     private String message;
 
@@ -84,8 +86,6 @@ public class AccueilServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.setAttribute( "erreurs", erreurs );
         request.setAttribute( "resultat", resultat );
-
-        //getServletContext().getRequestDispatcher( "/index.jsp" ).forward( request, response );
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -112,9 +112,9 @@ public class AccueilServlet extends HttpServlet {
 
     /**
      * Verifie que le mot de passe est correctement formé
-     * @param motDePasse
-     * @param confirmation
-     * @throws Exception
+     * @param motDePasse mot de passe de l'utilisateur
+     * @param confirmation mot de passe de confirmation de l'utilisateur
+     * @throws Exception indique l'erreur
      */
     private void validationMotsDePasse( String motDePasse, String confirmation ) throws Exception{
         if (motDePasse != null && motDePasse.trim().length() != 0 && confirmation != null && confirmation.trim().length() != 0) {
@@ -146,6 +146,11 @@ public class AccueilServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Verifie que la date de naissance est correcte et presente
+     * @param date
+     * @throws Exception
+     */
     private void validationDateNaissance(String date) throws Exception {
         if(date == null) {
             throw  new Exception("Vous devez bien avoir une date de naissance, non ?");

@@ -24,16 +24,14 @@ public class Database {
         try {
             String DBurl = "jdbc:mysql://localhost:3306?useSSL=false&useTimeZone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&";
             con = DriverManager.getConnection(DBurl, "covid", "covid");
-            System.out.println("connexion réussie");
         } catch (SQLException e) {
-            System.out.println("Connection à la BDD impossible");
             System.exit(-1);
         }
         return con;
     }
 
     /**
-     * Modifier la Database
+     * Modifier/Remplir la Database
      * @param query
      */
     public void doUpdate(String query) {
@@ -60,12 +58,24 @@ public class Database {
         }
         return null;
     }
+
+    /**
+     * Permet de creer un nouvel utilisateur
+     * @param user
+     */
     public void inscrireUser(User user){
         String requete = "Insert into coviddb.users (login,firstname,lastname,password, dateCreation ,dateNaissance, admin)" +
-                "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " + user.getDateCreation() + "," + user.getDateNaissance() + ",'0')";
+                "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " +"'"+user.getDateCreation()+"'" + "," + "'"+user.getDateNaissance() +"'"+ ",'0')";
+        System.out.println("REQUETE = " + requete);
         doUpdate(requete);
     }
 
+    /**
+     * Permet de connecter un utilisateur
+     * @param login
+     * @param password
+     * @return
+     */
     public User connecterUser(String login, String password){
         String requete = "Select * from coviddb.users where login = '" + login + "' AND password = '"+ password +"'";
         ResultSet resultSet = doQuery(requete);
@@ -81,11 +91,44 @@ public class Database {
                     user.setDateNaissance(resultSet.getString("dateNaissance"));
                     user.setAdmin(resultSet.getString("admin"));
             }
-            System.out.println(user.toString());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return user;
     }
+
+    /**
+     * Permet de modifier les informations d'un utilisateur
+     * @param id
+     * @param login
+     * @param firstname
+     * @param lastname
+     * @param password
+     * @param dateNaissance
+     */
+    public void modifierUser(String id,String login,String firstname, String lastname, String password, String dateNaissance){
+        String requete = "Update coviddb.users set login =" + "'"+ login + "',"
+                +"firstname =" +"'" + firstname + "',"
+                +"lastname =" +"'" + lastname + "',"
+                +"password =" +"'" + password + "',"
+                +"dateNaissance =" +"'" + dateNaissance + "'"
+                + "where idUser = " + "'" + id +"'";
+        doUpdate(requete);
+    }
+
+    public String getID(String login){
+        String requete = "Select idUser from coviddb.users where login = '" + login +"'";
+        ResultSet resultSet =  doQuery(requete);
+        String id = null;
+        try {
+            if(resultSet.next()) {
+                id = resultSet.getString("idUser");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return id;
+    }
+
 
 }
