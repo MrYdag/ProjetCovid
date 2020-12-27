@@ -18,8 +18,8 @@ CREATE TABLE Users (
                        firstname VARCHAR(50),
                        lastname VARCHAR(50),
                        password VARCHAR(999) NOT NULL,
-                       dateCreation DATETIME NOT NULL,
-                       dateNaissance DATETIME NOT NULL,
+                       dateCreation DATETIME,
+                       dateNaissance DATETIME,
                        admin BOOL default false
 ) ;
 

@@ -10,8 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/firstServlet")
-public class HelloServlet extends HttpServlet {
+@WebServlet(name = "signupservlet", value = "/inscription")
+public class SignUpServlet extends HttpServlet {
     private String message;
 
     public void init() {
@@ -85,7 +85,7 @@ public class HelloServlet extends HttpServlet {
         request.setAttribute( "erreurs", erreurs );
         request.setAttribute( "resultat", resultat );
 
-        //getServletContext().getRequestDispatcher( "/index.jsp" ).forward( request, response );
+        getServletContext().getRequestDispatcher("/signUp.jsp").forward( request, response );
     }
 
     public void destroy() {
