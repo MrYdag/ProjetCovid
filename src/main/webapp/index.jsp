@@ -4,17 +4,28 @@
 
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Accueil</title>
 </head>
 <body>
 <%-- Inclusion d'une page avec l'action standard JSP. --%>
-<jsp:include page="html/menu.html" />
+<jsp:include page="WEB-INF/menu.jsp" />
 
 <h1>
 <div>
     Bienvenue sur TousContreLACovid.fr
 </div>
 </h1>
+
+
+<%-- Deconnecté --%>
+<c:if test="${empty sessionScope.current_user }">
+    <p>Vous êtes déconnecté !</p>
+</c:if>
+
+<%-- Connecté --%>
+<c:if test="${ !empty sessionScope.current_user }">
+    <p>Vous êtes ${ sessionScope.current_user.login } !</p>
+</c:if>
 
 </body>
 

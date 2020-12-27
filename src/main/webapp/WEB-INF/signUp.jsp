@@ -5,10 +5,11 @@
 <html>
 <head>
     <title>JSP - Hello World</title>
+
 </head>
 <body>
 <%-- Inclusion d'une page avec l'action standard JSP. --%>
-<jsp:include page="../html/menu.html" />
+<jsp:include page="menu.jsp" />
 
 <h1><%= "Creer un compte sur TousContreLACovid" %></h1>
 

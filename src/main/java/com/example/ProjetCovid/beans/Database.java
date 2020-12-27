@@ -1,9 +1,6 @@
 package com.example.ProjetCovid.beans;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
 
@@ -34,20 +31,61 @@ public class Database {
         }
         return con;
     }
+
+    /**
+     * Modifier la Database
+     * @param query
+     */
     public void doUpdate(String query) {
         try {
             connection = connection();
-            System.out.println(connection);
             statement = connection.prepareStatement(query);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Questionner la Database
+     * @param query
+     */
+    public ResultSet doQuery(String query){
+        try {
+            connection = connection();
+            statement = connection.prepareStatement(query);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public void inscrireUser(User user){
         String requete = "Insert into coviddb.users (login,firstname,lastname,password, dateCreation ,dateNaissance, admin)" +
                 "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " + user.getDateCreation() + "," + user.getDateNaissance() + ",'0')";
         doUpdate(requete);
+    }
+
+    public User connecterUser(String login, String password){
+        String requete = "Select * from coviddb.users where login = '" + login + "' AND password = '"+ password +"'";
+        ResultSet resultSet = doQuery(requete);
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        try {
+            if(resultSet.next()) {
+                    user.setId(resultSet.getString("idUser"));
+                    user.setFirstName(resultSet.getString("firstname"));
+                    user.setLastName(resultSet.getString("lastname"));
+                    user.setDateCreation(resultSet.getString("dateCreation"));
+                    user.setDateNaissance(resultSet.getString("dateNaissance"));
+                    user.setAdmin(resultSet.getString("admin"));
+            }
+            System.out.println(user.toString());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return user;
     }
 
 }

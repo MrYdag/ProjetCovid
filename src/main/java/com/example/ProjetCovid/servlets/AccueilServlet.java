@@ -10,8 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/firstServlet")
-public class HelloServlet extends HttpServlet {
+@WebServlet(name = "accueilServlet", value = "/accueilServlet")
+public class AccueilServlet extends HttpServlet {
     private String message;
 
     public void init() {
@@ -86,6 +86,11 @@ public class HelloServlet extends HttpServlet {
         request.setAttribute( "resultat", resultat );
 
         //getServletContext().getRequestDispatcher( "/index.jsp" ).forward( request, response );
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        response.setContentType("text/html");
+        getServletContext().getRequestDispatcher( "/index.jsp" ).forward( request, response );
     }
 
     public void destroy() {

@@ -85,8 +85,13 @@ public class SignUpServlet extends HttpServlet {
         request.setAttribute( "erreurs", erreurs );
         request.setAttribute( "resultat", resultat );
 
-        getServletContext().getRequestDispatcher("/signUp.jsp").forward( request, response );
+        getServletContext().getRequestDispatcher("/WEB-INF/signUp.jsp").forward( request, response );
     }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        this.getServletContext().getRequestDispatcher( "/WEB-INF/signUp.jsp" ).forward( request, response );
+    }
+
 
     public void destroy() {
     }

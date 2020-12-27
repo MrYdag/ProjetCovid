@@ -80,4 +80,18 @@ public class User {
     public void setAdmin(String admin) {
         this.admin = admin;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateCreation='" + dateCreation + '\'' +
+                ", dateNaissance='" + dateNaissance + '\'' +
+                ", admin='" + admin + '\'' +
+                '}';
+    }
 }
