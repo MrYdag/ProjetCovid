@@ -8,6 +8,7 @@ public class User {
     private String lastName;
     private String dateCreation;
     private String dateNaissance;
+    private String coroned;
     private String admin;
 
     public User() {
@@ -73,6 +74,14 @@ public class User {
         this.dateNaissance = dateNaissance;
     }
 
+    public String getCoroned() {
+        return coroned;
+    }
+
+    public void setCoroned(String coroned) {
+        this.coroned = coroned;
+    }
+
     public String getAdmin() {
         return admin;
     }
@@ -91,6 +100,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", dateCreation='" + dateCreation + '\'' +
                 ", dateNaissance='" + dateNaissance + '\'' +
+                ", coroned='" + coroned + '\'' +
                 ", admin='" + admin + '\'' +
                 '}';
     }

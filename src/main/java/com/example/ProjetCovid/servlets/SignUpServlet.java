@@ -35,6 +35,7 @@ public class SignUpServlet extends HttpServlet {
 
         User user = new User();
 
+        //Test la pertinence de l'adresse mail
         try {
             validationEmail(email);
         } catch (Exception e) {
@@ -42,6 +43,7 @@ public class SignUpServlet extends HttpServlet {
         }
         user.setLogin(email);
 
+        //Test la pertinence du mot de passe, et verifie que le mot de passe et identique au mot de passe de confirmation
         try{
             validationMotsDePasse(password,passwordConfirmation);
         } catch (Exception e) {
@@ -49,6 +51,7 @@ public class SignUpServlet extends HttpServlet {
         }
         user.setPassword(password);
 
+        //Test la pertinence du prenom
         try {
             validationFirstName(firstName);
         } catch (Exception e) {
@@ -56,6 +59,7 @@ public class SignUpServlet extends HttpServlet {
         }
         user.setFirstName(firstName);
 
+        //Test la pertinence du nom
         try {
             validationLastName(lastName);
         } catch (Exception e) {
@@ -63,6 +67,7 @@ public class SignUpServlet extends HttpServlet {
         }
         user.setLastName(lastName);
 
+        //Test la pertinence de la date de naissance
         try {
             validationDateNaissance(dateBirthday);
         } catch (Exception e) {
@@ -82,7 +87,7 @@ public class SignUpServlet extends HttpServlet {
             Database dataBase = new Database();
             dataBase.inscrireUser(user);
         } else {
-            resultat = "Échec de l'inscription.";
+            resultat = "Échec de l'inscription: " + erreurs;
         }
 
         out.println("<html><body>");

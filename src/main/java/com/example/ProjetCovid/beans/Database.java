@@ -12,6 +12,10 @@ public class Database {
 
     }
 
+    /**
+     * Permet de connecter la database
+     * @return la database
+     */
     public Connection connection() {
         Connection con = null;
 
@@ -32,7 +36,7 @@ public class Database {
 
     /**
      * Modifier/Remplir la Database
-     * @param query
+     * @param query Requete que l'on va executer
      */
     public void doUpdate(String query) {
         try {
@@ -46,7 +50,7 @@ public class Database {
 
     /**
      * Questionner la Database
-     * @param query
+     * @param query Requete que l'on va executer
      */
     public ResultSet doQuery(String query){
         try {
@@ -64,16 +68,17 @@ public class Database {
      * @param user
      */
     public void inscrireUser(User user){
-        String requete = "Insert into coviddb.users (login,firstname,lastname,password, dateCreation ,dateNaissance, admin)" +
-                "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " +"'"+user.getDateCreation()+"'" + "," + "'"+user.getDateNaissance() +"'"+ ",'0')";
+        String requete = "Insert into coviddb.users (login,firstname,lastname,password, dateCreation ,dateNaissance, admin, coroned)" +
+                "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " +"'"+user.getDateCreation()+"'" + "," + "'"+user.getDateNaissance() +"'"+ ",'0','0')";
+
         System.out.println("REQUETE = " + requete);
         doUpdate(requete);
     }
 
     /**
      * Permet de connecter un utilisateur
-     * @param login
-     * @param password
+     * @param login @mail d'un utilisateur
+     * @param password mot de passe d'un utilisateur
      * @return
      */
     public User connecterUser(String login, String password){
@@ -89,6 +94,7 @@ public class Database {
                     user.setLastName(resultSet.getString("lastname"));
                     user.setDateCreation(resultSet.getString("dateCreation"));
                     user.setDateNaissance(resultSet.getString("dateNaissance"));
+                    user.setCoroned(resultSet.getString("coroned"));
                     user.setAdmin(resultSet.getString("admin"));
             }
         } catch (SQLException throwables) {
@@ -99,12 +105,12 @@ public class Database {
 
     /**
      * Permet de modifier les informations d'un utilisateur
-     * @param id
-     * @param login
-     * @param firstname
-     * @param lastname
-     * @param password
-     * @param dateNaissance
+     * @param id ID d'un utilisateur
+     * @param login @mail d'un utilisateur
+     * @param firstname prenom d'un utilisateur
+     * @param lastname nom d'un utilisateur
+     * @param password mot de passe d'un utilisateur
+     * @param dateNaissance date de naissance d'un utilisateur
      */
     public void modifierUser(String id,String login,String firstname, String lastname, String password, String dateNaissance){
         String requete = "Update coviddb.users set login =" + "'"+ login + "',"
@@ -116,6 +122,20 @@ public class Database {
         doUpdate(requete);
     }
 
+    /**
+     * Permet de declarer un utilisateur positif à la Covid-19
+     * @param user
+     */
+    public void coroned(User user){
+        String requete = "Update coviddb.users set coroned = '1' where idUser = " + "'" + user.getId() + "'";
+        doUpdate(requete);
+    }
+
+    /**
+     * Permet de connaitre l'ID d'un utilisateur à partir de son @mail
+     * @param login @mail d'un utilisateur
+     * @return
+     */
     public String getID(String login){
         String requete = "Select idUser from coviddb.users where login = '" + login +"'";
         ResultSet resultSet =  doQuery(requete);

@@ -20,6 +20,7 @@ CREATE TABLE Users (
                        password VARCHAR(999) NOT NULL,
                        dateCreation DATETIME,
                        dateNaissance DATETIME,
+                       coroned BOOL default false,
                        admin BOOL default false
 ) ;
 
