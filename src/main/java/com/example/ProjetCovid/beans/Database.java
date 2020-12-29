@@ -1,6 +1,8 @@
 package com.example.ProjetCovid.beans;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
@@ -104,6 +106,60 @@ public class Database {
     }
 
     /**
+     * Permet de trouver un User à partir de son @mail
+     * @param login
+     * @return
+     */
+    public User getUser(String login){
+        String requete = "Select * from coviddb.users where login = '" + login + "'";
+        ResultSet resultSet = doQuery(requete);
+        User user = new User();
+        user.setLogin(login);
+        try {
+            if(resultSet.next()) {
+                user.setId(resultSet.getString("idUser"));
+                user.setPassword(resultSet.getString("password"));
+                user.setFirstName(resultSet.getString("firstname"));
+                user.setLastName(resultSet.getString("lastname"));
+                user.setDateCreation(resultSet.getString("dateCreation"));
+                user.setDateNaissance(resultSet.getString("dateNaissance"));
+                user.setCoroned(resultSet.getString("coroned"));
+                user.setAdmin(resultSet.getString("admin"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return user;
+    }
+
+    /**
+     * Permet de trouver un User à partir de son ID
+     * @param id
+     * @return
+     */
+    public User getUserbyID(String id){
+        String requete = "Select * from coviddb.users where idUser = '" + id + "'";
+        ResultSet resultSet = doQuery(requete);
+        User user = new User();
+        user.setId(id);
+        try {
+            if(resultSet.next()) {
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setFirstName(resultSet.getString("firstname"));
+                user.setLastName(resultSet.getString("lastname"));
+                user.setDateCreation(resultSet.getString("dateCreation"));
+                user.setDateNaissance(resultSet.getString("dateNaissance"));
+                user.setCoroned(resultSet.getString("coroned"));
+                user.setAdmin(resultSet.getString("admin"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return user;
+    }
+
+    /**
      * Permet de modifier les informations d'un utilisateur
      * @param id ID d'un utilisateur
      * @param login @mail d'un utilisateur
@@ -150,5 +206,51 @@ public class Database {
         return id;
     }
 
+    /**
+     * Permet de devenir ami avec un autre utilisateur.
+     * @param user
+     * @param ami
+     */
+    public void addFriend(User user,User ami){
+        String requete = "Insert into coviddb.friends (idFriend1,idFriend2) values ('" + user.getId() + "','" + ami.getId() +"')" ;
+        System.out.println(requete);
+        doUpdate(requete);
+    }
 
+    /**
+     * Permet de savoir si deux utilisateurs sont amis.
+     * @param user
+     * @param ami
+     * @return
+     */
+    public Boolean isFriend(User user,User ami) {
+        String requete = "Select * from coviddb.friends where (idFriend1 = " + "'" + user.getId() +"'" + "AND idFriend2 = "  + "'" + ami.getId() +"')"+
+                "OR" + "(idFriend2 = " + "'" + user.getId() +"'" + "AND idFriend1 = "  + "'" + ami.getId() +"')" ;
+        ResultSet resultSet =  doQuery(requete);
+        boolean res = false;
+        try {
+            if(resultSet.next()){
+                res = true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return res;
+    }
+
+    public List<String> friends(User user){
+        //todo: Faire une requete plus propre ! (Celle-ci est fausse)
+        String requete = "Select * from coviddb.friends where (idFriend1 =" + "'" +user.getId() +"')" + "OR" + "(idFriend2 =" + "'" +user.getId() +"')";
+        ResultSet resultSet = doQuery(requete);
+        List<String> listeAmis = new ArrayList<>();
+        try{
+        while (resultSet.next()){
+            listeAmis.add(resultSet.getString("idFriend1"));
+            listeAmis.add(resultSet.getString("idFriend2"));
+        }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return listeAmis;
+    }
 }

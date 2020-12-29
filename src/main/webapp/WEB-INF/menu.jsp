@@ -7,13 +7,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link rel="stylesheet" href="../css/bootstrap2/css/bootstrap.css">
-<script src="../css/bootstrap2/js/bootstrap.js"></script>
 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
 
@@ -30,10 +29,20 @@
 
     <%-- Connecté --%>
     <c:if test="${ !empty sessionScope.current_user }">
+        <li><a href="showFriends" title="Voir ses amis">Amis</a></li>
         <li><a href="positive" title="Se declarer positif à la covid-19">Se declarer positif</a></li>
         <li><a href="information" title="Voir votre compte">Parametres</a></li>
         <li><a href="deconnexion" title="Se deconnecter">Deconnexion</a></li>
     </c:if>
+
+    <form role="search" action="profil" method="get">
+        <div>
+            <input type="search" id="recherche" name="profil"
+                   placeholder="Rechercher sur le site…"
+                   aria-label="Rechercher parmi le contenu du site">
+            <button type="submit">Rechercher</button>
+        </div>
+    </form>
 
 </ul>
 

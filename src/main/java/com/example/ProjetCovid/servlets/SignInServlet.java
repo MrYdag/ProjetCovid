@@ -16,7 +16,6 @@ import java.util.Map;
 @WebServlet(name = "signinservlet", value = "/connexion")
 public class SignInServlet extends HttpServlet {
 
-    public static final String currentUser = "current_user";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
@@ -52,7 +51,7 @@ public class SignInServlet extends HttpServlet {
             Database dataBase = new Database();
             user = dataBase.connecterUser(email,password);
             if(user.getId()!=null) {
-                session.setAttribute(currentUser, user);
+                session.setAttribute("current_user", user);
                 resultat = "Succès de connexion.";
             } else {
                 resultat = "Échec de connexion: login ou mot de passe incorrect";

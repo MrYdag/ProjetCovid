@@ -60,20 +60,20 @@
 <div>
     <c:choose>
         <c:when test="${sessionScope.current_user.coroned == '0'}">
-            Negatif
+            <h2> Vous êtes actuellement négatif à la covid-19 </h2>
         </c:when>
         <c:when test="${sessionScope.current_user.coroned == '1'}">
-            Positif
+            <h2> Vous avez été testé positif à la covid-19 </h2>
         </c:when>
-        <c:otherwise>
-            Autre
-        </c:otherwise>
     </c:choose>
+</div>
 
     <form action="positive" method="post">
-        <input type="button" value="Je suis positif !">
+        <div class="button">
+            <button type="submit">Je suis positif !</button>
+        </div>
     </form>
-</div>
+
 <br>
 
 </body>

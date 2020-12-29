@@ -23,8 +23,8 @@ public class PositiveServlet extends HttpServlet {
         Database database = new Database();
         User user = (User) session.getAttribute("current_user");
         database.coroned(user);
-        System.out.println("Je suis positif ! ");
-        session.setAttribute("current_user",user);
+        user.setCoroned("1");
+        session.setAttribute("currentUser", user);
         getServletContext().getRequestDispatcher( "/WEB-INF/positive.jsp" ).forward( request, response );
 
     }
@@ -32,7 +32,8 @@ public class PositiveServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
-        System.out.println("GET Positif");
+        User user = (User) session.getAttribute("current_user");
+        request.setAttribute("current_user", user);
         getServletContext().getRequestDispatcher( "/WEB-INF/positive.jsp" ).forward( request, response );
     }
 
