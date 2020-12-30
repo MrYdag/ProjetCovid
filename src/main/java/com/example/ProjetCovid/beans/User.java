@@ -1,5 +1,6 @@
 package com.example.ProjetCovid.beans;
 
+//todo dateCreation et dateNaissance doivent etre not null dans la DB
 public class User {
     private String id;
     private String login;

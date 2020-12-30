@@ -55,8 +55,8 @@ CREATE TABLE Lieu (
 
 CREATE TABLE Activity (
                           idActivity INTEGER PRIMARY KEY AUTO_INCREMENT,
-                          dateDebut DATETIME NOT NULL,
-                          dateFin DATETIME NOT NULL,
+                          dateDebut DATETIME,
+                          dateFin DATETIME,
                           idLieu INTEGER NOT NULL,
                           FOREIGN KEY (idLieu) REFERENCES Lieu(idLieu) ON UPDATE CASCADE
 );

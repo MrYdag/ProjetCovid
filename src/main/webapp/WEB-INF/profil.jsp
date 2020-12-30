@@ -19,12 +19,12 @@
 
 <%-- Trouvé --%>
 <c:if test="${!empty requestScope.profil.firstName }">
-    <div> Login : <c:out value="${requestScope.profil.login}"> </c:out></div>
-    <div> Prenom : <c:out value="${requestScope.profil.firstName}"> </c:out></div>
-    <div> Nom : <c:out value="${requestScope.profil.lastName}"> </c:out></div>
-    <div> Date de naissance : <c:out value="${requestScope.profil.dateNaissance}"> </c:out></div>
-    <div> Coroned : <c:out value="${requestScope.profil.coroned}"> </c:out></div>
-    <div> Admin : <c:out value="${requestScope.profil.admin}"> </c:out></div>
+    <div> Login : <c:out value="${requestScope.profil.login} "> </c:out></div>
+    <div> Prenom : <c:out value="${requestScope.profil.firstName} "> </c:out></div>
+    <div> Nom : <c:out value="${requestScope.profil.lastName} "> </c:out></div>
+    <div> Date de naissance : <c:out value="${requestScope.profil.dateNaissance} "> </c:out></div>
+    <div> Coroned : <c:out value="${requestScope.profil.coroned} "> </c:out></div>
+    <div> Admin : <c:out value="${requestScope.profil.admin} "> </c:out></div>
 
     <br>
 
@@ -34,10 +34,10 @@
         <%-- Si je suis deja ami avec lui--%>
         <c:choose>
             <c:when test="${requestScope.friend == 'true'}">
-                C'est deja votre ami
+                <input type="button" value="Retirer de la liste d'ami" onclick="window.location.href='removeFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
             </c:when>
             <c:when test="${requestScope.friend == 'false'}">
-                <input type="button" onclick="window.location.href='askFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
+                <input type="button" value="Demander en ami" onclick="window.location.href='askFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
             </c:when>
             <c:otherwise>
                 BUG !

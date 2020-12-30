@@ -67,13 +67,10 @@ public class Database {
 
     /**
      * Permet de creer un nouvel utilisateur
-     * @param user
      */
     public void inscrireUser(User user){
         String requete = "Insert into coviddb.users (login,firstname,lastname,password, dateCreation ,dateNaissance, admin, coroned)" +
                 "values ('" + user.getLogin() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getPassword() + "', " +"'"+user.getDateCreation()+"'" + "," + "'"+user.getDateNaissance() +"'"+ ",'0','0')";
-
-        System.out.println("REQUETE = " + requete);
         doUpdate(requete);
     }
 
@@ -81,7 +78,6 @@ public class Database {
      * Permet de connecter un utilisateur
      * @param login @mail d'un utilisateur
      * @param password mot de passe d'un utilisateur
-     * @return
      */
     public User connecterUser(String login, String password){
         String requete = "Select * from coviddb.users where login = '" + login + "' AND password = '"+ password +"'";
@@ -107,8 +103,8 @@ public class Database {
 
     /**
      * Permet de trouver un User à partir de son @mail
-     * @param login
-     * @return
+     * @param login @mail
+     * @return l'utilisateur en question
      */
     public User getUser(String login){
         String requete = "Select * from coviddb.users where login = '" + login + "'";
@@ -134,8 +130,8 @@ public class Database {
 
     /**
      * Permet de trouver un User à partir de son ID
-     * @param id
-     * @return
+     * @param id ID de l'utilisateur
+     * @return l'utilisateur en question
      */
     public User getUserbyID(String id){
         String requete = "Select * from coviddb.users where idUser = '" + id + "'";
@@ -180,7 +176,7 @@ public class Database {
 
     /**
      * Permet de declarer un utilisateur positif à la Covid-19
-     * @param user
+     * @param user Utilisateur
      */
     public void coroned(User user){
         String requete = "Update coviddb.users set coroned = '1' where idUser = " + "'" + user.getId() + "'";
@@ -190,7 +186,7 @@ public class Database {
     /**
      * Permet de connaitre l'ID d'un utilisateur à partir de son @mail
      * @param login @mail d'un utilisateur
-     * @return
+     * @return l'ID
      */
     public String getID(String login){
         String requete = "Select idUser from coviddb.users where login = '" + login +"'";
@@ -208,20 +204,30 @@ public class Database {
 
     /**
      * Permet de devenir ami avec un autre utilisateur.
-     * @param user
-     * @param ami
+     * @param user Utilisateur
+     * @param ami Utilisateur
      */
     public void addFriend(User user,User ami){
         String requete = "Insert into coviddb.friends (idFriend1,idFriend2) values ('" + user.getId() + "','" + ami.getId() +"')" ;
+        doUpdate(requete);
+    }
+
+    /**
+     * Permet de retirer un ami de sa liste d'ami
+     * @param user L'utilisateur
+     * @param ami L'ami
+     */
+    public void removeFriend(User user, User ami) {
+        String requete = "Delete from coviddb.friends where (idFriend1 = '" + user.getId() + "' AND idFriend2 = '" + ami.getId() +"') OR (idFriend1 = '" + ami.getId() + "' AND idFriend2 = '" + user.getId() +"')";
         System.out.println(requete);
         doUpdate(requete);
     }
 
     /**
      * Permet de savoir si deux utilisateurs sont amis.
-     * @param user
-     * @param ami
-     * @return
+     * @param user Utilisateur
+     * @param ami Utilisateur
+     * @return Si les deux utilisateurs sont amis (True/False)
      */
     public Boolean isFriend(User user,User ami) {
         String requete = "Select * from coviddb.friends where (idFriend1 = " + "'" + user.getId() +"'" + "AND idFriend2 = "  + "'" + ami.getId() +"')"+
@@ -238,8 +244,11 @@ public class Database {
         return res;
     }
 
+    /**
+     * @param user l'utilisateur à qui ont veut connaitre ses amis
+     * @return l'ID de touts les utilisateurs qui sont amis avec un utilisateur
+     */
     public List<String> friends(User user){
-        //todo: Faire une requete plus propre ! (Celle-ci est fausse)
         String requete = "Select * from coviddb.friends where (idFriend1 =" + "'" +user.getId() +"')" + "OR" + "(idFriend2 =" + "'" +user.getId() +"')";
         ResultSet resultSet = doQuery(requete);
         List<String> listeAmis = new ArrayList<>();
@@ -253,4 +262,91 @@ public class Database {
         }
         return listeAmis;
     }
+
+    /**
+     * @param activity L'activité que l'on va creer dans la DB
+     */
+    public void createActivity(Activity activity){
+        String requete = "Insert into coviddb.activity (dateDebut,dateFin,idLieu)" +
+                " values ('" + activity.getDateDebut() + "', '" + activity.getDateFin() + "', '" + activity.getIdLieu() + "')";
+        System.out.println(requete);
+        doUpdate(requete);
+
+    }
+
+    /**
+     *
+     * @param lieu Le lieu que l'on va creer dans la DB
+     */
+    public void createLieu(Lieu lieu){
+        String requete = "Insert into coviddb.lieu (nom,adresse,coordonneesGPS)" +
+                "values ('" + lieu.getNom() + "', '" + lieu.getAdresse() + "', '" + lieu.getCoordGPS() + "')";
+        doUpdate(requete);
+    }
+
+    public String getID(Lieu lieu){
+        String requete ="Select * from coviddb.lieu where (nom =" + "'" +lieu.getNom() +"') AND (adresse = " + "'" + lieu.getAdresse() + "')";
+        ResultSet resultSet =  doQuery(requete);
+        String id = null;
+        try {
+            if(resultSet.next()){
+                id = resultSet.getString("idLieu");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return id;
+    }
+
+    /**
+     * @return l'ID de toutes les activités presentent dans la DB
+     */
+    public List<String> activities(){
+        String requete = "Select * from coviddb.activity";
+        ResultSet resultSet = doQuery(requete);
+        List<String> activities = new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                activities.add(resultSet.getString("idActivity"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activities;
+    }
+
+    public Activity getActivityByID(String id){
+        String requete = "Select * from coviddb.activity where idActivity = '" + id + "'";
+        ResultSet resultSet = doQuery(requete);
+        Activity activity = new Activity();
+        activity.setIdActivity(id);
+        try {
+            if(resultSet.next()) {
+                activity.setDateDebut(resultSet.getString("dateDebut"));
+                activity.setDateFin(resultSet.getString("dateFin"));
+                activity.setIdLieu(resultSet.getString("idLieu"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activity;
+    }
+
+    public Lieu getLieu(String id) {
+        String requete = "Select * from coviddb.lieu where idLieu = '" + id + "'";
+        ResultSet resultSet = doQuery(requete);
+        Lieu lieu = new Lieu();
+        lieu.setIdLieu(id);
+        try {
+            if(resultSet.next()){
+                lieu.setNom(resultSet.getString("nom"));
+                lieu.setAdresse(resultSet.getString("adresse"));
+                lieu.setCoordGPS(resultSet.getString("coordonneesGPS"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return lieu;
+    }
+
 }

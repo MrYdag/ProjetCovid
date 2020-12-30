@@ -22,12 +22,13 @@
     <c:forEach items="${requestScope.listFriends}"  var="friend">
         <tr>
         <div>
-            <td> <c:out value="${friend.login}"/> </td>
+            <td>  <a href="./profil?profil=${friend.login}"> <c:out value="${friend.login}"/> </a> </td>
             <td> <c:out value="${friend.firstName}"/> </td>
             <td> <c:out value="${friend.lastName}"/> </td>
             <td> <c:out value="${friend.dateNaissance}"/> </td>
             <td> <c:out value="${friend.coroned}"/> </td>
             <td> <c:out value="${friend.admin}"/> </td>
+
         </div>
         </tr>
     </c:forEach>
