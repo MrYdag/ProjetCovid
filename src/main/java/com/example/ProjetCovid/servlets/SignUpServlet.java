@@ -78,7 +78,9 @@ public class SignUpServlet extends HttpServlet {
         //Date de la création du compte
         SimpleDateFormat formater = null;
         Date aujourdhui = new Date();
-        formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+        //formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+        formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         user.setDateCreation(formater.format(aujourdhui));
 
         /* Initialisation du résultat global de la validation. */

@@ -61,20 +61,21 @@
     <c:choose>
         <c:when test="${sessionScope.current_user.coroned == '0'}">
             <h2> Vous êtes actuellement négatif à la covid-19 </h2>
+            <br>
+            <form action="positive" method="post">
+                <div class="button">
+                    <button type="submit">Je suis positif !</button>
+                </div>
+            </form>
         </c:when>
         <c:when test="${sessionScope.current_user.coroned == '1'}">
             <h2> Vous avez été testé positif à la covid-19 </h2>
+            <br>
+            <h1>ISOLEZ-VOUS !</h1>
         </c:when>
     </c:choose>
 </div>
 
-    <form action="positive" method="post">
-        <div class="button">
-            <button type="submit">Je suis positif !</button>
-        </div>
-    </form>
-
-<br>
 
 </body>
 </html>

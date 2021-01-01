@@ -32,7 +32,8 @@ public class InformationServlet extends HttpServlet {
         String firstName = request.getParameter("user_firstname");
         String lastName = request.getParameter("user_lastname");
         String password = request.getParameter("user_password");
-        String passwordConfirmation = request.getParameter("user_passwordConfirmation");
+        String newPassword = request.getParameter("new_user_password");
+        String newpasswordConfirmation = request.getParameter("new_user_passwordConfirmation");
         String dateBirthday = request.getParameter("user_birthday");
 
         //Test la pertinence de l'adresse mail
@@ -44,7 +45,8 @@ public class InformationServlet extends HttpServlet {
 
         //Test la pertinence du mot de passe, et verifie que le mot de passe et identique au mot de passe de confirmation
         try{
-            validationMotsDePasse(password,passwordConfirmation);
+            validationMotsDePasse(newPassword,newpasswordConfirmation);
+            validationMotsDePasse(password,newPassword);
         } catch (Exception e) {
             erreurs.put("password", e.getMessage() );
         }
@@ -80,7 +82,7 @@ public class InformationServlet extends HttpServlet {
             user.setLogin(email);
             user.setFirstName(firstName);
             user.setLastName(lastName);
-            user.setPassword(password);
+            user.setPassword(newPassword);
             user.setDateNaissance(dateBirthday);
         } else {
             resultat = "Échec de modification: " + erreurs;

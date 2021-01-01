@@ -30,9 +30,10 @@
     <%-- Connecté --%>
     <c:if test="${ !empty sessionScope.current_user }">
         <li><a href="createActivity" title="Permet de créer une activity">Créer activité</a></li>
-        <li><a href="showActivity" title="Permet voir toutes les activités">Activité</a></li>
+        <li><a href="showActivities" title="Permet voir toutes les activités">Activité</a></li>
         <li><a href="showFriends" title="Voir ses amis">Amis</a></li>
         <li><a href="positive" title="Se declarer positif à la covid-19">Se declarer positif</a></li>
+        <li><a href="showNotifications" title="Voir ses notifications">Notifications</a></li>
         <li><a href="information" title="Voir votre compte">Parametres</a></li>
         <li><a href="deconnexion" title="Se deconnecter">Deconnexion</a></li>
     </c:if>

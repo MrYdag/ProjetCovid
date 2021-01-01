@@ -39,9 +39,9 @@
     </div>
     <div>
         <label for="dateFin">Fin:</label>
-        <input type="date" id="dateFin" name="activitydatedebut" >
+        <input type="date" id="dateFin" name="activitydatefin" >
         <label for="heureFin"> à </label>
-        <input type="time" id="heureFin" name="activityheuredebut">
+        <input type="time" id="heureFin" name="activityheurefin">
         <%--<span class="erreur">${erreurs['birthday']}</span> --%>
     </div>
 

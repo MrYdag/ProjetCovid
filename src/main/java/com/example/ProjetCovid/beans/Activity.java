@@ -55,4 +55,15 @@ public class Activity {
     public void setLieu(Lieu lieu) {
         this.lieu = lieu;
     }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "idActivity='" + idActivity + '\'' +
+                ", dateDebut='" + dateDebut + '\'' +
+                ", dateFin='" + dateFin + '\'' +
+                ", idLieu='" + idLieu + '\'' +
+                ", lieu=" + lieu +
+                '}';
+    }
 }

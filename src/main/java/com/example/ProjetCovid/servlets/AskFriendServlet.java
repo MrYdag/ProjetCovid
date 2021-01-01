@@ -2,7 +2,6 @@ package com.example.ProjetCovid.servlets;
 
 import com.example.ProjetCovid.beans.Database;
 import com.example.ProjetCovid.beans.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @WebServlet(name = "askFriendServlet", value = "/askFriend")
 public class AskFriendServlet extends HttpServlet {
@@ -28,6 +29,18 @@ public class AskFriendServlet extends HttpServlet {
         User profil = database.getUser(request.getParameter("profil"));
 
         database.addFriend(user,profil);
+
+        //Date de la création de la notification
+        SimpleDateFormat formater = null;
+        Date aujourdhui = new Date();
+        //formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+        formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        //Notif pour celui qui fait la demande
+        database.createNotification(user, "Vous etes desormais amis avec " + profil.getLogin(), formater.format(aujourdhui) , "0");
+
+        //Notif pour celui qui recoit la demande
+        database.createNotification(profil, user.getLogin() + " vous a ajouté en amis", formater.format(aujourdhui) , "0");
 
         request.setAttribute("profil",profil);
         request.setAttribute("friend",true);

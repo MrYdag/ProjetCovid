@@ -43,7 +43,10 @@ CREATE TABLE AskFriends (
 CREATE TABLE Notifications (
                                idNotif INTEGER PRIMARY KEY AUTO_INCREMENT,
                                about TEXT NOT NULL,
-                               dateSending DATETIME NOT NULL
+                               dateSending DATETIME NOT NULL,
+                               idUser INTEGER,
+                               isRead BOOLEAN default false,
+                               Foreign Key (idUser) REFERENCES Users(idUser) ON DELETE CASCADE
 ) ;
 
 CREATE TABLE Lieu (
@@ -59,4 +62,12 @@ CREATE TABLE Activity (
                           dateFin DATETIME,
                           idLieu INTEGER NOT NULL,
                           FOREIGN KEY (idLieu) REFERENCES Lieu(idLieu) ON UPDATE CASCADE
+);
+
+CREATE TABLE Participation (
+    idUser INTEGER,
+    idActivity INTEGER,
+    CONSTRAINT PK_Participation PRIMARY KEY (idUser,idActivity),
+    foreign key (idUser) references Users(idUser) on update cascade on delete cascade,
+    foreign key (idActivity) references  Activity(idActivity) on update cascade on delete cascade
 );

@@ -14,20 +14,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "showActivityServlet", value = "/showActivity")
-public class ShowActivityServlet extends HttpServlet {
+@WebServlet(name = "leaveActivityServlet", value = "/leaveActivity")
+public class LeaveActivityServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("current_user");
         Database database = new Database();
+        User user = (User) session.getAttribute("current_user");
         Activity activity = database.getActivityByID(request.getParameter("activity"));
         activity.setLieu(database.getLieu(activity.getIdLieu()));
+        request.setAttribute("activity",activity);
+        database.removeParticipation(user,activity);
 
+        //Participants
         List<String> participant = new ArrayList<>();
         List<User> participantList = new ArrayList<>();
         participant = database.participants(activity);
@@ -36,8 +40,8 @@ public class ShowActivityServlet extends HttpServlet {
             participantList.add(user1);
         }
         request.setAttribute("listParticipants",participantList);
-        request.setAttribute("activity",activity);
-        request.setAttribute("isParticipating",database.isParticipating(user,activity));
+
+        request.setAttribute("isParticipating",false);
         getServletContext().getRequestDispatcher("/WEB-INF/showActivity.jsp").forward( request, response );
     }
 }

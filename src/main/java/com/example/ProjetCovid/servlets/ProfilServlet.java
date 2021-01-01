@@ -23,8 +23,9 @@ public class ProfilServlet extends HttpServlet {
         Database database = new Database();
         User profil = database.getUser(request.getParameter("profil"));
         request.setAttribute("profil",profil);
-        System.out.println(database.isFriend((User) (session.getAttribute("current_user")),profil)); //Est-ce qu'ils sont ami ?
-        request.setAttribute("friend",database.isFriend((User) (session.getAttribute("current_user")),profil));
+        if(session.getAttribute("current_user")!=null) {
+            request.setAttribute("friend", database.isFriend((User) (session.getAttribute("current_user")), profil));
+        }
         getServletContext().getRequestDispatcher("/WEB-INF/profil.jsp").forward( request, response );
     }
 }

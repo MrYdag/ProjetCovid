@@ -30,18 +30,29 @@
 
     <%-- Si je suis connecté--%>
     <c:if test="${!empty sessionScope.current_user}">
-
-        <%-- Si je suis deja ami avec lui--%>
         <c:choose>
-            <c:when test="${requestScope.friend == 'true'}">
-                <input type="button" value="Retirer de la liste d'ami" onclick="window.location.href='removeFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
+            <%-- Je consulte mon propre profil--%>
+            <c:when test="${sessionScope.current_user.id == requestScope.profil.id}">
+                <div>Je consulte mon propre profil</div>
             </c:when>
-            <c:when test="${requestScope.friend == 'false'}">
-                <input type="button" value="Demander en ami" onclick="window.location.href='askFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
+            <%-- Je consulte un autre profil que le mien--%>
+            <c:when test="${sessionScope.current_user.id != requestScope.profil.id}">
+                <%-- Si je suis deja ami avec lui--%>
+                <c:choose>
+                    <c:when test="${requestScope.friend == 'true'}">
+                        <input type="button" value="Retirer de la liste d'ami" onclick="window.location.href='removeFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
+                    </c:when>
+                    <c:when test="${requestScope.friend == 'false'}">
+                        <input type="button" value="Demander en ami" onclick="window.location.href='askFriend?profil=${requestScope.profil.login}'" width="200" height="50"/>
+                    </c:when>
+                    <c:otherwise>
+                        BUG !
+                    </c:otherwise>
+                </c:choose>
             </c:when>
-            <c:otherwise>
-                BUG !
-            </c:otherwise>
+
+
+
         </c:choose>
 
     </c:if>

@@ -83,17 +83,17 @@ public class Database {
         String requete = "Select * from coviddb.users where login = '" + login + "' AND password = '"+ password +"'";
         ResultSet resultSet = doQuery(requete);
         User user = new User();
-        user.setLogin(login);
-        user.setPassword(password);
         try {
             if(resultSet.next()) {
-                    user.setId(resultSet.getString("idUser"));
-                    user.setFirstName(resultSet.getString("firstname"));
-                    user.setLastName(resultSet.getString("lastname"));
-                    user.setDateCreation(resultSet.getString("dateCreation"));
-                    user.setDateNaissance(resultSet.getString("dateNaissance"));
-                    user.setCoroned(resultSet.getString("coroned"));
-                    user.setAdmin(resultSet.getString("admin"));
+                user.setLogin(login);
+                user.setPassword(password);
+                user.setId(resultSet.getString("idUser"));
+                user.setFirstName(resultSet.getString("firstname"));
+                user.setLastName(resultSet.getString("lastname"));
+                user.setDateCreation(resultSet.getString("dateCreation"));
+                user.setDateNaissance(resultSet.getString("dateNaissance"));
+                user.setCoroned(resultSet.getString("coroned"));
+                user.setAdmin(resultSet.getString("admin"));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -110,9 +110,9 @@ public class Database {
         String requete = "Select * from coviddb.users where login = '" + login + "'";
         ResultSet resultSet = doQuery(requete);
         User user = new User();
-        user.setLogin(login);
         try {
             if(resultSet.next()) {
+                user.setLogin(login);
                 user.setId(resultSet.getString("idUser"));
                 user.setPassword(resultSet.getString("password"));
                 user.setFirstName(resultSet.getString("firstname"));
@@ -137,9 +137,9 @@ public class Database {
         String requete = "Select * from coviddb.users where idUser = '" + id + "'";
         ResultSet resultSet = doQuery(requete);
         User user = new User();
-        user.setId(id);
         try {
             if(resultSet.next()) {
+                user.setId(id);
                 user.setLogin(resultSet.getString("login"));
                 user.setPassword(resultSet.getString("password"));
                 user.setFirstName(resultSet.getString("firstname"));
@@ -183,6 +183,38 @@ public class Database {
         doUpdate(requete);
     }
 
+    public List<String> casContact(User user){
+        String requeteAmi = "Select * from coviddb.friends where (idFriend1 =" + "'" +user.getId() +"')" + "OR" + "(idFriend2 =" + "'" +user.getId() +"')";
+        ResultSet resultSet = doQuery(requeteAmi);
+
+        //Les amis de l'utilisateur
+        List<String> casContacts = new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                if(resultSet.getString("idFriend1") != user.getId()) {
+                    casContacts.add(resultSet.getString("idFriend1"));
+                }
+                if(resultSet.getString("idFriend2") != user.getId()) {
+                    casContacts.add(resultSet.getString("idFriend2"));
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        //Tous les utilisateurs qui participent a des activités où l'utilisateur coroned participe
+        List<String> listActivityString = this.getActivities(user);
+        for(String s : listActivityString){
+            casContacts.addAll(this.participants(this.getActivityByID(s)));
+        }
+
+        for (String uz : casContacts) {
+            System.out.println(uz);
+        }
+
+        return casContacts;
+    }
+
     /**
      * Permet de connaitre l'ID d'un utilisateur à partir de son @mail
      * @param login @mail d'un utilisateur
@@ -219,7 +251,6 @@ public class Database {
      */
     public void removeFriend(User user, User ami) {
         String requete = "Delete from coviddb.friends where (idFriend1 = '" + user.getId() + "' AND idFriend2 = '" + ami.getId() +"') OR (idFriend1 = '" + ami.getId() + "' AND idFriend2 = '" + user.getId() +"')";
-        System.out.println(requete);
         doUpdate(requete);
     }
 
@@ -315,13 +346,18 @@ public class Database {
         return activities;
     }
 
+    /**
+     * Retrouver une activité grace à son ID
+     * @param id de l'activité
+     * @return l'activité correspondante
+     */
     public Activity getActivityByID(String id){
         String requete = "Select * from coviddb.activity where idActivity = '" + id + "'";
         ResultSet resultSet = doQuery(requete);
         Activity activity = new Activity();
-        activity.setIdActivity(id);
         try {
             if(resultSet.next()) {
+                activity.setIdActivity(id);
                 activity.setDateDebut(resultSet.getString("dateDebut"));
                 activity.setDateFin(resultSet.getString("dateFin"));
                 activity.setIdLieu(resultSet.getString("idLieu"));
@@ -332,13 +368,18 @@ public class Database {
         return activity;
     }
 
+    /**
+     * Permet de trouver un lieu à partir de son ID
+     * @param id du lieu
+     * @return le lieu correspondant
+     */
     public Lieu getLieu(String id) {
         String requete = "Select * from coviddb.lieu where idLieu = '" + id + "'";
         ResultSet resultSet = doQuery(requete);
         Lieu lieu = new Lieu();
-        lieu.setIdLieu(id);
         try {
             if(resultSet.next()){
+                lieu.setIdLieu(id);
                 lieu.setNom(resultSet.getString("nom"));
                 lieu.setAdresse(resultSet.getString("adresse"));
                 lieu.setCoordGPS(resultSet.getString("coordonneesGPS"));
@@ -348,5 +389,151 @@ public class Database {
         }
         return lieu;
     }
+
+    /**
+     *
+     * @param user
+     * @param activity
+     */
+    public void createParticipation(User user, Activity activity){
+        String requete = "Insert into coviddb.participation (idUser,idActivity)" +
+                " values ('" + user.getId() + "', '" + activity.getIdActivity() + "')";
+        System.out.println(requete);
+        doUpdate(requete);
+    }
+
+    /**
+     *
+     * @param user
+     * @param activity
+     * @return
+     */
+    public Boolean isParticipating(User user, Activity activity) {
+        String requete = "Select * from coviddb.participation where (idUser = " + "'" + user.getId() +"'" + "AND idActivity = " + "'" + activity.getIdActivity() +"')";
+        ResultSet resultSet =  doQuery(requete);
+        boolean res = false;
+        try {
+            if(resultSet.next()){
+                res = true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     *
+     * @param user
+     * @param activity
+     */
+    public void removeParticipation(User user, Activity activity) {
+        String requete = "Delete from coviddb.participation where (idUser = '" + user.getId() + "' AND idActivity = '" + activity.getIdActivity() +"')";
+        doUpdate(requete);
+    }
+
+
+    /**
+     *
+     * @param activity
+     * @return
+     */
+    public List<String> participants(Activity activity){
+        String requete = "Select * from coviddb.participation where idActivity = '" + activity.getIdActivity() + "'";
+        ResultSet resultSet = doQuery(requete);
+        List<String> participants = new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                participants.add(resultSet.getString("idUser"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return participants;
+    }
+
+
+    /**
+     * Permet de connaiter les activités auquelles participes un utilisateur
+     * @param user l'utilisateur auquel on veut connaitre ses activités
+     * @return une liste d'activité
+     */
+    public List<String> getActivities(User user){
+        String requete = "Select * from coviddb.participation where idUser = '" + user.getId() + "'";
+        ResultSet resultSet = doQuery(requete);
+        List<String> activities = new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                activities.add(resultSet.getString("idUser"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activities;
+    }
+
+
+
+    /**
+     *
+     * @param user
+     * @param about
+     * @param date
+     * @param isRead
+     */
+    public void createNotification(User user, String about, String date, String isRead ){
+        String requete = "Insert into coviddb.notifications (about,dateSending,idUser,isRead)" +
+                " values ('" + about + "', '" + date + "', '" + user.getId() + "', '" + isRead + "')";
+        System.out.println(requete);
+        doUpdate(requete);
+    }
+
+    public List<String> notifications(User user){
+        String requete = "Select * from coviddb.notifications where idUser = '" + user.getId() + "'";
+        ResultSet resultSet = doQuery(requete);
+        List<String> notifications = new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                notifications.add(resultSet.getString("idNotif"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return notifications;
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Notification getNotification(String id) {
+        String requete = "Select * from coviddb.notifications where idNotif = '" + id + "'";
+        ResultSet resultSet = doQuery(requete);
+        Notification notification = new Notification();
+        try {
+            if(resultSet.next()){
+                notification.setIdNotif(id);
+                notification.setAbout(resultSet.getString("about"));
+                notification.setDateSending(resultSet.getString("dateSending"));
+                notification.setIdUser(resultSet.getString("idUser"));
+                notification.setIsReading(resultSet.getString("isRead"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return notification;
+    }
+
+    public void read(Notification notification){
+        String requete = "Update coviddb.notifications set isRead = '1' where idNotif = " + "'" + notification.getIdNotif() + "'";
+        doUpdate(requete);
+    }
+
+
+
+
+
+
 
 }

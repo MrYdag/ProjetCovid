@@ -87,13 +87,6 @@ public class CreateActivityServlet extends HttpServlet {
         } else {
             resultat = "Échec lors de la création de l'activité: " + erreurs;
         }
-/*
-        //Date de la création du compte
-        SimpleDateFormat formater = null;
-        Date aujourdhui = new Date();
-        formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
-        user.setDateCreation(formater.format(aujourdhui));
- */
 
         request.setAttribute("activity",activity);
         request.setAttribute("lieu",lieu);
