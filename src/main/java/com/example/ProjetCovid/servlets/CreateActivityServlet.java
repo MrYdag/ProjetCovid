@@ -3,19 +3,12 @@ package com.example.ProjetCovid.servlets;
 import com.example.ProjetCovid.beans.Activity;
 import com.example.ProjetCovid.beans.Database;
 import com.example.ProjetCovid.beans.Lieu;
-import com.example.ProjetCovid.beans.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +19,7 @@ public class CreateActivityServlet extends HttpServlet {
         response.setContentType("text/html");
 
         String resultat;
-        Map<String, String> erreurs = new HashMap<String, String>();
-        PrintWriter out = response.getWriter();
-
+        Map<String, String> erreurs = new HashMap<>();
 
         String nomLieu = request.getParameter("nomLieu");
         String adresseLieu = request.getParameter("adresseLieu");

@@ -35,7 +35,7 @@ public class RemoveFriendServlet extends HttpServlet {
 
 
         //Date de la création de la notification
-        SimpleDateFormat formater = null;
+        SimpleDateFormat formater;
         Date aujourdhui = new Date();
         //formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
         formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

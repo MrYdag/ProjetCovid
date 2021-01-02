@@ -28,7 +28,7 @@ public class ShowActivityServlet extends HttpServlet {
         Activity activity = database.getActivityByID(request.getParameter("activity"));
         activity.setLieu(database.getLieu(activity.getIdLieu()));
 
-        List<String> participant = new ArrayList<>();
+        List<String> participant;
         List<User> participantList = new ArrayList<>();
         participant = database.participants(activity);
         for(String idUser : participant){

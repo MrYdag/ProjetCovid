@@ -26,7 +26,7 @@ public class SignInServlet extends HttpServlet {
         String password = request.getParameter("user_password");
 
         String resultat;
-        Map<String, String> erreurs = new HashMap<String, String>();
+        Map<String, String> erreurs = new HashMap<>();
 
         PrintWriter out = response.getWriter();
 
@@ -93,8 +93,6 @@ public class SignInServlet extends HttpServlet {
 
     /**
      * Verifie que le mot de passe est correctement formé
-     * @param motDePasse
-     * @throws Exception
      */
     private void validationMotsDePasse( String motDePasse) throws Exception{
         if (motDePasse != null && motDePasse.trim().length() != 0) {

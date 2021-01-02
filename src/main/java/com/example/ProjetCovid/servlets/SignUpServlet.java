@@ -23,7 +23,7 @@ public class SignUpServlet extends HttpServlet {
         response.setContentType("text/html");
 
         String resultat;
-        Map<String, String> erreurs = new HashMap<String, String>();
+        Map<String, String> erreurs = new HashMap<>();
 
         PrintWriter out = response.getWriter();
         String email = request.getParameter("user_mail");
@@ -76,7 +76,7 @@ public class SignUpServlet extends HttpServlet {
         user.setDateNaissance(dateBirthday);
 
         //Date de la création du compte
-        SimpleDateFormat formater = null;
+        SimpleDateFormat formater;
         Date aujourdhui = new Date();
         //formater = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
         formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

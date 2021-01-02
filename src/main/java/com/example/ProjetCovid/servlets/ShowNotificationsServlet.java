@@ -24,7 +24,7 @@ public class ShowNotificationsServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Database database = new Database();
 
-        List<String> notificationIDs = new ArrayList<>();
+        List<String> notificationIDs;
         List<Notification> notifications = new ArrayList<>();
         List<Notification> newNotifications = new ArrayList<>();
         notificationIDs = database.notifications((User) session.getAttribute("current_user"));

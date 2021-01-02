@@ -24,7 +24,7 @@ public class ShowActivitiesServlet extends HttpServlet {
         Database database = new Database();
 
         //Participants
-        List<String> activities = new ArrayList<>();
+        List<String> activities;
         List<Activity> activityList = new ArrayList<>();
         activities = database.activities();
         for(String idActivity : activities){

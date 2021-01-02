@@ -31,7 +31,7 @@ public class JoinActivityServlet extends HttpServlet {
         database.createParticipation(user,activity);
 
         //Participants
-        List<String> participant = new ArrayList<>();
+        List<String> participant;
         List<User> participantList = new ArrayList<>();
         participant = database.participants(activity);
         for(String idUser : participant){

@@ -23,7 +23,7 @@ public class ShowFriendsServlet extends HttpServlet {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
         Database database = new Database();
-        List<String> maybeFriends = new ArrayList<>();
+        List<String> maybeFriends;
         List<User> friends = new ArrayList<>();
         maybeFriends = database.friends((User) session.getAttribute("current_user"));
         String idCurrentUser = ((User) session.getAttribute("current_user")).getId();

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,8 @@ import java.util.Map;
 @WebServlet(name = "informationservlet", value = "/information")
 public class InformationServlet extends HttpServlet {
 
+    private User user;
+
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
@@ -25,16 +29,24 @@ public class InformationServlet extends HttpServlet {
 
 
         String resultat;
-        Map<String, String> erreurs = new HashMap<String, String>();
+        Map<String, String> erreurs = new HashMap<>();
 
         PrintWriter out = response.getWriter();
-        String email = request.getParameter("user_mail");
+        String newEmail = request.getParameter("user_mail");
+        String email = user.getLogin();
         String firstName = request.getParameter("user_firstname");
         String lastName = request.getParameter("user_lastname");
         String password = request.getParameter("user_password");
         String newPassword = request.getParameter("new_user_password");
         String newpasswordConfirmation = request.getParameter("new_user_passwordConfirmation");
         String dateBirthday = request.getParameter("user_birthday");
+
+        //Test la pertinence de l'adresse mail
+        try {
+            validationEmail(newEmail);
+        } catch (Exception e) {
+            erreurs.put("new email",e.getMessage());
+        }
 
         //Test la pertinence de l'adresse mail
         try {
@@ -45,11 +57,17 @@ public class InformationServlet extends HttpServlet {
 
         //Test la pertinence du mot de passe, et verifie que le mot de passe et identique au mot de passe de confirmation
         try{
-            validationMotsDePasse(newPassword,newpasswordConfirmation);
-            validationMotsDePasse(password,newPassword);
+            validationNewMotsDePasse(newPassword,newpasswordConfirmation);
         } catch (Exception e) {
-            erreurs.put("password", e.getMessage() );
+            erreurs.put("new password", e.getMessage() );
         }
+
+        try {
+            validationMotDePasse(password);
+        } catch (Exception e) {
+            erreurs.put("password", e.getMessage());
+        }
+
 
         //Test la pertinence du prenom
         try {
@@ -75,15 +93,22 @@ public class InformationServlet extends HttpServlet {
         if ( erreurs.isEmpty() ) {
             resultat = "Succès de modification.";
             Database dataBase = new Database();
-            dataBase.modifierUser(dataBase.getID(email), email, firstName, lastName, password, dateBirthday);
+            dataBase.modifierUser(dataBase.getID(email), newEmail, firstName, lastName, newPassword, dateBirthday);
 
             session = request.getSession();
-            User user = (User) session.getAttribute("current_user");
-            user.setLogin(email);
+            user = (User) session.getAttribute("current_user");
+            user.setLogin(newEmail);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setPassword(newPassword);
             user.setDateNaissance(dateBirthday);
+
+            //Date de la création de la notification
+            SimpleDateFormat formater;
+            Date aujourdhui = new Date();
+            formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+            dataBase.createNotification(user,"Vos informations personnelles ont été mises à jour", formater.format(aujourdhui), "0");
         } else {
             resultat = "Échec de modification: " + erreurs;
         }
@@ -96,6 +121,8 @@ public class InformationServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
+        HttpSession session = request.getSession();
+        user = (User) session.getAttribute("current_user");
         getServletContext().getRequestDispatcher("/WEB-INF/changeInfo.jsp").forward( request, response );
     }
 
@@ -113,12 +140,12 @@ public class InformationServlet extends HttpServlet {
     }
 
     /**
-     * Verifie que le mot de passe est correctement formé
+     * Verifie que le nouveau mot de passe est correctement formé
      * @param motDePasse mot de passe de l'utilisateur
      * @param confirmation mot de passe de confirmation de l'utilisateur
      * @throws Exception indique l'erreur
      */
-    private void validationMotsDePasse( String motDePasse, String confirmation ) throws Exception{
+    private void validationNewMotsDePasse( String motDePasse, String confirmation ) throws Exception{
         if (motDePasse != null && motDePasse.trim().length() != 0 && confirmation != null && confirmation.trim().length() != 0) {
             if (!motDePasse.equals(confirmation)) {
                 throw new Exception("Les mots de passe entrés sont différents, merci de les saisir à nouveau.");
@@ -127,6 +154,22 @@ public class InformationServlet extends HttpServlet {
             }
         } else {
             throw new Exception("Merci de saisir et confirmer votre mot de passe.");
+        }
+    }
+
+    /**
+     * Verifie que l'ancien mot de passe est correct
+     * @param motDePasse mot de passe que rentre l'utilisateur
+     * @throws Exception indique l'erreur
+     */
+    private void validationMotDePasse(String motDePasse) throws Exception {
+        if(motDePasse != null){
+            if(!motDePasse.equals(user.getPassword())){
+                throw new Exception("Mot de passe incorrect");
+            }
+
+        } else {
+            throw new Exception("Merci de saisir votre mot de passe");
         }
     }
 
