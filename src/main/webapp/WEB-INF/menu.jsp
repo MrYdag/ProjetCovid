@@ -18,8 +18,6 @@
 
 <ul id="navigation">
     <li><a href="accueil" title="Retourner à l'accueil">Accueil</a></li>
-    <li><a href="#" title="WIP">WIP</a></li>
-
 
     <%-- Deconnecté --%>
     <c:if test="${empty sessionScope.current_user }">
@@ -36,6 +34,7 @@
         <li><a href="showNotifications" title="Voir ses notifications">Notifications</a></li>
         <li><a href="information" title="Voir votre compte">Parametres</a></li>
         <li><a href="deconnexion" title="Se deconnecter">Deconnexion</a></li>
+
     </c:if>
 
     <form role="search" action="profil" method="get">
@@ -48,7 +47,6 @@
     </form>
 
 </ul>
-
 
 
 </body>
